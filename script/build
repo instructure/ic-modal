@@ -2,5 +2,4 @@
 echo "# running script/build"
 rm -rf dist
 broccoli build dist
-git add --force dist
 

@@ -1,5 +1,8 @@
 #!/bin/sh
 echo "# running script/test"
+exec 6<>/dev/tcp/127.0.0.1/4200 && \
+  echo "script/test: kill your broccoli server first" && \
+  exit
 script/build
 node_modules/.bin/bower install
 node_modules/.bin/karma start --browsers Firefox --single-run
