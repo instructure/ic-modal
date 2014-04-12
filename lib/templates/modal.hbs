@@ -1,5 +1,18 @@
 <ic-modal-content>
-  <ic-modal-title aria-hidden="true">{{label}}</ic-modal-title>
+
+  {{#unless titleComponent}}
+    {{#ic-modal-title register=false}}Modal Content{{/ic-modal-title}}
+  {{/unless}}
+
+  {{#unless triggerComponent}}
+    {{#ic-modal-trigger
+      class="default"
+      register=false
+      aria-label="close"
+    }}×{{/ic-modal-trigger}}
+  {{/unless}}
+
   {{yield}}
+
 </ic-modal-content>
 

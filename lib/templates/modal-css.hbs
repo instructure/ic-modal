@@ -20,6 +20,7 @@ ic-modal[is-open] {
 }
 
 ic-modal-content {
+  position: relative;
   background: #fff;
   width: 800px;
   margin: 40px auto;
@@ -34,4 +35,25 @@ ic-modal-title {
   border-bottom: 1px solid #ccc;
   font-weight: 600;
 }
+
+.ic-modal-trigger.default {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  border: none;
+  background: none;
+  padding: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  color: #ccc;
+}
+
+.ic-modal-trigger.default:hover {
+  color: #444;
+}
+
+.ic-modal-trigger.default:active {
+  color: #000;
+}
+
 
