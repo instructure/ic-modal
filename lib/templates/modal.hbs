@@ -1,16 +1,12 @@
 <ic-modal-content>
 
-  {{#unless titleComponent}}
-    {{#ic-modal-title register=false}}Modal Content{{/ic-modal-title}}
-  {{/unless}}
+  {{#if makeTitle}}
+    {{#ic-modal-title}}Modal Content{{/ic-modal-title}}
+  {{/if}}
 
-  {{#unless triggerComponent}}
-    {{#ic-modal-trigger
-      class="default"
-      register=false
-      aria-label="close"
-    }}×{{/ic-modal-trigger}}
-  {{/unless}}
+  {{#if makeTrigger}}
+    {{#ic-modal-trigger class="default" aria-label="close"}}×{{/ic-modal-trigger}}
+  {{/if}}
 
   {{yield}}
 

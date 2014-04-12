@@ -6,13 +6,14 @@ ic-modal-title {
 }
 
 ic-modal {
+  background-color: rgba(255, 255, 255, .75);
   display: none;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255, 255, 255, .75);
+  padding: 10px;
 }
 
 ic-modal[is-open] {
@@ -20,40 +21,38 @@ ic-modal[is-open] {
 }
 
 ic-modal-content {
-  position: relative;
   background: #fff;
-  width: 800px;
+  border: 1px solid hsl(0, 0%, 70%);
+  position: relative;
+  max-width: 800px;
   margin: 40px auto;
-  padding: 0 20px 20px 20px;
-  border: 1px solid #aaa;
   border-radius: 4px;
+  padding: 20px;
 }
 
 ic-modal-title {
-  padding: 20px;
-  margin: 0 -20px 20px;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid hsl(0, 0%, 90%);
+  padding: 0 20px 20px 20px;
+  margin: 0 -20px 20px -20px;
   font-weight: 600;
 }
 
 .ic-modal-trigger.default {
   position: absolute;
-  top: 16px;
+  top: 10px;
   right: 20px;
   border: none;
   background: none;
   padding: 6px;
-  font-size: 16px;
-  cursor: pointer;
-  color: #ccc;
+  font-size: 18px;
+  color: inherit;
 }
 
-.ic-modal-trigger.default:hover {
-  color: #444;
+.ic-modal-trigger.default:focus {
+  text-shadow: 0 0 6px hsl(208, 47%, 60%),
+    0 0 2px hsl(208, 47%, 60%),
+    0 0 2px hsl(208, 47%, 60%),
+    0 0 1px hsl(208, 47%, 60%);
+  outline: none;
 }
-
-.ic-modal-trigger.default:active {
-  color: #000;
-}
-
 
