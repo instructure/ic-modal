@@ -300,6 +300,44 @@ define(
       }.observes('close-when'),
 
       /**
+       * Often you need a mechanism besides an ic-modal-toggle to open a dialog,
+       * like to start a new feature tour. You can bind to this attribute and set
+       * it to true, causing the dialog to open.
+       *
+       * ```html
+       * {{#ic-modal open-when=starTour}}
+       *   Ohai
+       * {{/ic-modal}}
+       * ```
+       *
+       * ```js
+       * App.ApplicationController = Ember.Controller.extend({
+       *   checkTour: function() {
+       *     if (ENV.NEEDS_TOUR) this.set('startTour', true);
+       *   }.on('init')
+       * });
+       * ```
+       *
+       * @property close-when
+       * @public
+       */
+
+      'open-when': false,
+
+      /**
+       * Facilitates 'open-when' behavior.
+       *
+       * @method openWhen
+       * @private
+       */
+
+      openWhen: function() {
+        if (!this.get('open-when')) return;
+        this.open();
+        this.set('open-when', false);
+      }.observes('open-when'),
+
+      /**
        * All Dialogs need a title for the screenreader (and the UI, usually
        * anyway) and a close button. If a modal does not have an
        * `ic-modal-title` or an `ic-modal-toggle` then this will create some
