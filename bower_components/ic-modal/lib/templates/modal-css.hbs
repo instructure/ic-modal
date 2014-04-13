@@ -1,0 +1,58 @@
+ic-modal-screen,
+ic-modal,
+ic-modal-content,
+ic-modal-title {
+  display: block;
+}
+
+ic-modal {
+  background-color: rgba(255, 255, 255, .75);
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 10px;
+}
+
+ic-modal[is-open] {
+  display: block;
+}
+
+ic-modal-content {
+  background: #fff;
+  border: 1px solid hsl(0, 0%, 70%);
+  position: relative;
+  max-width: 800px;
+  margin: 40px auto;
+  border-radius: 4px;
+  padding: 20px;
+}
+
+ic-modal-title {
+  border-bottom: 1px solid hsl(0, 0%, 90%);
+  padding: 0 20px 20px 20px;
+  margin: 0 -20px 20px -20px;
+  font-weight: 600;
+}
+
+.ic-modal-trigger.default {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  border: none;
+  background: none;
+  padding: 6px;
+  font-size: 18px;
+  color: inherit;
+}
+
+.ic-modal-trigger.default:focus {
+  text-shadow: 0 0 6px hsl(208, 47%, 60%),
+    0 0 2px hsl(208, 47%, 60%),
+    0 0 2px hsl(208, 47%, 60%),
+    0 0 1px hsl(208, 47%, 60%);
+  outline: none;
+}
+

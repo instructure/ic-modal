@@ -1,0 +1,14 @@
+<ic-modal-content>
+
+  {{#if makeTitle}}
+    {{#ic-modal-title}}Modal Content{{/ic-modal-title}}
+  {{/if}}
+
+  {{#if makeTrigger}}
+    {{#ic-modal-trigger class="default" aria-label="close"}}×{{/ic-modal-trigger}}
+  {{/if}}
+
+  {{yield}}
+
+</ic-modal-content>
+
