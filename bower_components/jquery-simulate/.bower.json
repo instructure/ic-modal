@@ -1,0 +1,14 @@
+{
+  "name": "jquery-simulate",
+  "_cacheHeaders": {
+    "ETag": "\"1ec98a29ab967c365f8e7ebb4fd9f42c\"",
+    "Content-Length": "7887",
+    "Content-Type": "text/plain; charset=utf-8",
+    "Content-Disposition": "inline"
+  },
+  "_release": "e-tag:1ec98a29a",
+  "main": "index.js",
+  "_source": "https://raw.github.com/jquery/jquery-simulate/master/jquery.simulate.js",
+  "_target": "*",
+  "_originalSource": "https://raw.github.com/jquery/jquery-simulate/master/jquery.simulate.js"
+}
