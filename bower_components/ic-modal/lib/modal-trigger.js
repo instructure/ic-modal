@@ -1,7 +1,7 @@
-import { Component, computed } from 'ember';
+import Ember from 'ember';
 import ModalComponent from './modal';
 
-export default Component.extend({
+export default Ember.Component.extend({
 
   classNames: ['ic-modal-trigger'],
 
@@ -22,7 +22,7 @@ export default Component.extend({
   tagName: 'button',
 
   /**
-   * Finds the modal this element controls. If a toggler is a child of
+   * Finds the modal this element controls. If a trigger is a child of
    * the modal, you do not need to specify a "controls" attribute.
    *
    * @method findModal
@@ -51,6 +51,7 @@ export default Component.extend({
    */
 
   toggleModalVisibility: function(event) {
+    this.sendAction('on-toggle', this);
     // don't focus if it was a mouse click, cause that's ugly
     var wasMouse = event.clientX && event.clientY;
     this.get('modal').toggleVisibility(this, {focus: !wasMouse});

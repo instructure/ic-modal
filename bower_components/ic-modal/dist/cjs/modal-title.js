@@ -9,8 +9,7 @@ exports["default"] = Ember.Component.extend({
 
   /**
    * Tells the screenreader not to read this element. The modal has its
-   * 'aria-describedby' set to the id of this element so it would be
-   * redundant.
+   * 'aria-labelledby' set to the id of this element so it would be redundant.
    *
    * @property aria-hidden
    */

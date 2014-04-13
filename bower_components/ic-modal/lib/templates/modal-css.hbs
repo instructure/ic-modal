@@ -1,40 +1,41 @@
-ic-modal-screen,
-ic-modal,
-ic-modal-content,
-ic-modal-title {
-  display: block;
-}
-
 ic-modal {
-  background-color: rgba(255, 255, 255, .75);
-  display: none;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  padding: 10px;
+  background-color: hsla(0, 0%, 100%, .75);
+  display: none;
+  align-items: center;
 }
 
 ic-modal[is-open] {
-  display: block;
+  display: flex;
 }
 
 ic-modal-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-content: stretch;
+  max-height: 90%;
+  width: 66%;
+  margin: auto;
   background: #fff;
   border: 1px solid hsl(0, 0%, 70%);
-  position: relative;
-  max-width: 800px;
-  margin: 40px auto;
   border-radius: 4px;
-  padding: 20px;
 }
 
 ic-modal-title {
-  border-bottom: 1px solid hsl(0, 0%, 90%);
-  padding: 0 20px 20px 20px;
-  margin: 0 -20px 20px -20px;
-  font-weight: 600;
+  flex: 0 0 auto;
+  padding: 20px;
+  border-bottom: 1px solid hsl(0, 0%, 85%);
+}
+
+ic-modal-main {
+  flex: 0 1 auto;
+  overflow: auto;
+  padding: 20px;
 }
 
 .ic-modal-trigger.default {
@@ -55,4 +56,20 @@ ic-modal-title {
     0 0 1px hsl(208, 47%, 60%);
   outline: none;
 }
+
+@media only screen and (max-width : 480px) {
+  ic-modal-content {
+    width: 95%;
+  }
+  ic-modal-title,
+  ic-modal-main {
+    padding: 10px;
+  }
+
+  .ic-modal-trigger.default {
+    top: 0px;
+    right: 2px;
+  }
+}
+
 

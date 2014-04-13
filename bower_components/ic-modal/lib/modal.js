@@ -34,7 +34,7 @@ export default Ember.Component.extend({
   attributeBindings: [
     'after-open',
     'aria-hidden',
-    'aria-labeledby',
+    'aria-labelledby',
     'is-open',
     'role',
     'tabindex'
@@ -92,11 +92,11 @@ export default Ember.Component.extend({
    * When the dialog opens the screenreader will get the label from the
    * title component
    *
-   * @property aria-labeledby
+   * @property aria-labelledby
    * @private
    */
 
-  'aria-labeledby': alias('titleComponent.elementId'),
+  'aria-labelledby': alias('titleComponent.elementId'),
 
   /**
    * Used as a bound attribute so you can style modals with
@@ -137,9 +137,11 @@ export default Ember.Component.extend({
 
   open: function(options) {
     options = options || {};
+    this.sendAction('on-open', this);
     this.set('isOpen', true);
     lastOpenedModal = this;
     Ember.run.schedule('afterRender', this, function() {
+      this.maybeMakeDefaultChildren();
       this.set('after-open', 'true');
       if (options.focus !== false) {
         this.focus();
@@ -160,6 +162,7 @@ export default Ember.Component.extend({
    */
 
   close: function() {
+    this.sendAction('on-close', this);
     this.set('isOpen', false);
     this.set('after-open', null);
     lastOpenedModal = null;
@@ -346,7 +349,7 @@ export default Ember.Component.extend({
   maybeMakeDefaultChildren: function() {
     if (!this.get('titleComponent')) this.set('makeTitle', true);
     if (!this.get('triggerComponent')) this.set('makeTrigger', true);
-  }.on('didInsertElement'),
+  },
 
   /**
    * @method registerTitle

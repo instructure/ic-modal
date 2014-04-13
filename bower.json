@@ -15,6 +15,6 @@
     "tests"
   ],
   "dependencies": {
-    "ic-modal": "~0.0.2"
+    "ic-modal": "~0.0.3"
   }
 }
