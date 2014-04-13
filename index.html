@@ -2,6 +2,17 @@
 <meta charset="utf-8">
 <title>ic-modal demo</title>
 <link rel="stylesheet" href="http://instructure.github.io/ic-ember/shared/styles.css">
+<style>
+ic-modal[is-open].fade-in {
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+
+ic-modal[after-open].fade-in {
+  opacity: 1;
+}
+
+</style>
 
 <header class="branding padbox">
   <h1>{{ic-modal}}</h1>
@@ -21,7 +32,7 @@
 {{/ic-modal-trigger}}
 
 {{#ic-modal-trigger controls="the-other-modal"}}
-  open model with custom title and close
+  open model with custom title, close, and css animation
 {{/ic-modal-trigger}}
 
 
@@ -46,7 +57,7 @@
 
 {{/ic-modal}}
 
-{{#ic-modal id="the-other-modal"}}
+{{#ic-modal id="the-other-modal" class="fade-in"}}
   {{#ic-modal-title}}I am the other modal{{/ic-modal-title}}
   {{#ic-modal-trigger aria-label="close other modal"}}CLOSE{{/ic-modal-trigger}}
 
