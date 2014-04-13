@@ -63,35 +63,35 @@ In its simplest form:
 
 With all the bells and whistles:
 
-```handlebars
-{{!
-  triggers can live anywhere in your template, just give them the id of
-  the modal they control, you can event have multiple triggers for the
+```html
+<!--
+  Triggers can live anywhere in your template, just give them the id of
+  the modal they control, you can even have multiple triggers for the
   same modal.
-}}
+-->
 
 {{#ic-modal-trigger controls="tacos"}}
   abrir los tacos
 {{/ic-modal}}
 
-{{!
+<!--
   The "closed-when" attribute can be bound to a controller property. If
   `tacosOrdered` gets set to `true` then the modal will close. Typically
   you'll do something like this when a form has been successfully
   submitted.
-}}
+-->
 
 {{#ic-modal id="tacos" closed-when=tacosOrdered}}
 
-  {{!
+  <!-- 
     This is optional, but you really should provide your own title,
     it gets used in the UI and is important for screenreaders to tell the
     user what modal they are in.
-  }}
+  -->
 
   {{#ic-modal-title}}Tacos{{/ic-modal-title}}
 
-  {{!
+  <!--
     If a trigger lives inside a modal it doesn't need a "controls"
     attribute, it'll just know.
     
@@ -100,11 +100,11 @@ With all the bells and whistles:
     own.
 
     Put the text to be read to screenreaders in an "aria-label" attribute
-  }}
+  -->
 
   {{#ic-modal-trigger aria-label="Cerrar los tacos"}}×{{/ic-modal-trigger}}
 
-  {{! Finally, just provide some content }}
+  <!-- Finally, just provide some content -->
 
   <p>
     ¡Los tacos!
