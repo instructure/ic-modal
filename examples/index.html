@@ -8,6 +8,8 @@
   open modal with default title and close
 {{/ic-modal-trigger}}
 
+<button {{action "openWithoutTrigger"}}>open without trigger</button>
+
 {{#ic-modal-trigger controls="the-other-modal"}}
   open model with custom title and close
 {{/ic-modal-trigger}}
@@ -16,6 +18,7 @@
 {{#ic-modal
   id="the-modal"
   close-when=formWasSubmitted
+  open-when=startFeatureTour
 }}
 
   <form {{action "submitForm" on="submit"}}>
@@ -65,6 +68,10 @@
     actions: {
       submitForm: function() {
         this.set('formWasSubmitted', true);
+      },
+
+      openWithoutTrigger: function() {
+        this.set('startFeatureTour', true);
       }
     }
   });
