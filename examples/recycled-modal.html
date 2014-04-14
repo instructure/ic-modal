@@ -1,0 +1,52 @@
+<!doctype html public "display of affection">
+<meta charset="utf-8">
+<title>ic-modal demo</title>
+
+<script type="text/x-handlebars">
+{{#each users}}
+  <div>
+    {{name}}
+    {{#ic-modal-trigger
+      controls="edit-user"
+      on-toggle="setModalModel"
+      user=this
+    }}edit{{/ic-modal-trigger}}
+  </div>
+{{/each}}
+
+{{#ic-modal id="edit-user"}}
+  <p>
+    <label for="user-name">User Name</label><br>
+    {{input id="user-name" value=editedUser.name}}
+  </p>
+  <p>
+    {{#ic-modal-trigger}}Done{{/ic-modal-trigger}}
+  </p>
+{{/ic-modal}}
+
+</script>
+
+<script src="../bower_components/jquery/dist/jquery.js"></script>
+<script src="../bower_components/handlebars/handlebars.js"></script>
+<script src="../bower_components/ember/ember.js"></script>
+<script src="../bower_components/ic-styled/main.js"></script>
+<!--<script src="../dist/globals/main.js"></script>-->
+<script src="http://localhost:4200/globals/main.js"></script>
+<script>
+  App = Ember.Application.create();
+  App.ApplicationController = Ember.Controller.extend({
+
+    users: [
+      {name: 'Ryan'},
+      {name: 'Merrick'}
+    ],
+
+    editingUser: false,
+
+    actions: {
+      setModalModel: function(trigger) {
+        this.set('editedUser', trigger.get('user'));
+      }
+    }
+  });
+</script>
