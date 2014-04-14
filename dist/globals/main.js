@@ -1,6 +1,7 @@
 !function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),(f.ic||(f.ic={})).modal=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 "use strict";
 var ModalComponent = _dereq_("./modal")["default"] || _dereq_("./modal");
+var ModalFormComponent = _dereq_("./modal-form")["default"] || _dereq_("./modal-form");
 var ModalTriggerComponent = _dereq_("./modal-trigger")["default"] || _dereq_("./modal-trigger");
 var ModalTitleComponent = _dereq_("./modal-title")["default"] || _dereq_("./modal-title");
 var css = _dereq_("./templates/modal-css")["default"] || _dereq_("./templates/modal-css");
@@ -11,17 +12,119 @@ Application.initializer({
   name: 'ic-modal',
   initialize: function(container) {
     container.register('component:ic-modal', ModalComponent);
+    container.register('component:ic-modal-form', ModalFormComponent);
+    container.register('component:ic-modal-content', Ember.Component.extend({tagName: 'ic-modal-content'}));
+    container.register('component:ic-modal-footer', Ember.Component.extend({tagName: 'ic-modal-footer'}));
     container.register('component:ic-modal-trigger', ModalTriggerComponent);
     container.register('component:ic-modal-title', ModalTitleComponent);
     container.register('template:components/ic-modal-css', css);
+    container.register('template:components/ic-modal-form-css', css);
     container.register('template:components/ic-modal', modalTemplate);
+    container.register('template:components/ic-modal-form', modalTemplate);
   }
 });
 
 exports.ModalComponent = ModalComponent;
 exports.ModalTriggerComponent = ModalTriggerComponent;
 exports.ModalTitleComponent = ModalTitleComponent;
-},{"./modal":4,"./modal-title":2,"./modal-trigger":3,"./tabbable-selector":5,"./templates/modal":7,"./templates/modal-css":6}],2:[function(_dereq_,module,exports){
+},{"./modal":5,"./modal-form":2,"./modal-title":3,"./modal-trigger":4,"./tabbable-selector":6,"./templates/modal":8,"./templates/modal-css":7}],2:[function(_dereq_,module,exports){
+"use strict";
+var ModalComponent = _dereq_("./modal")["default"] || _dereq_("./modal");
+
+
+/**
+ * Modal dialog designed specifically for submitting forms.
+ *
+ * @event on-submit - sent when the form has been submit
+ *   @param modal ModalFormComponent - the modal form being submitted
+ *   @param event Event - the DOM event. If you set `event.returnValue` to a
+ *     promise then the modal's `awaiting-return-value` will be true, and the
+ *     modal will not close until the promise resolves.
+ * @class ModalFormComponent
+ * @extends ModalComponent
+ */
+
+exports["default"] = ModalComponent.extend({
+
+  /**
+   * Can't use a custom element because we need all the goodness that browser
+   * pack into forms.
+   *
+   * @property tagName
+   * @private
+   */
+
+  tagName: 'form',
+
+  /**
+   * Because we can't use a custom tagName, we add a className for styling.
+   *
+   * @property classNames
+   * @public
+   */
+
+  classNames: ['ic-modal-form'],
+
+  attributeBindings: ['awaiting-return-value'],
+
+  /**
+   * Will be true when a dialog's returnValue is a promise. You can style your
+   * modal with `[awaiting-return-value] {}`, or branch in your template like so:
+   *
+   * ```html
+   * {{#ic-modal-form awaiting-return-value=saving}}
+   *   {{#ic-modal-content}}
+   *     {{#if saving}}
+   *       Saving...
+ *       {{else}}
+ *         <button type="submit">Save</button>
+ *       {{/if}}
+   *   {{/ic-modal-content}}
+   * {{/ic-modal-form}}
+   * ```
+   *
+   * @property awaiting-return-value
+   * @private
+   */
+
+  'awaiting-return-value': null,
+
+  /**
+   * Closes the dialog after submit. If the `event.returnValue` is a promise,
+   * it will wait for the promise to resolve.
+   *
+   * @method handleSubmit
+   * @private
+   */
+
+  handleSubmit: function(event) {
+    event.preventDefault();
+    // loses focus on submit, this might be better solved in ModalComponent but
+    // I don't understand the issue well enough
+    Ember.run.later(this.$(), 'focus', 0);
+    this.sendAction('on-submit', this, event);
+    if (event.returnValue && 'function' == typeof event.returnValue.then) {
+      this.set('awaiting-return-value', 'true');
+      event.returnValue.then(function() {
+        this.set('awaiting-return-value', null);
+        this.close();
+      }.bind(this), function() {
+        this.set('awaiting-return-value', null);
+      }.bind(this));
+    } else {
+      this.close();
+    }
+  }.on('submit'),
+
+  close: function() {
+    if (this.get('awaiting-return-value')) {
+      return this.sendAction('on-invalid-close', this);
+    }
+    return this._super.apply(this, arguments);
+  }
+
+});
+},{"./modal":5}],3:[function(_dereq_,module,exports){
 "use strict";
 var Ember = window.Ember["default"] || window.Ember;
 
@@ -50,7 +153,7 @@ exports["default"] = Ember.Component.extend({
   }.on('willInsertElement')
     
 });
-},{}],3:[function(_dereq_,module,exports){
+},{}],4:[function(_dereq_,module,exports){
 "use strict";
 var Ember = window.Ember["default"] || window.Ember;
 var ModalComponent = _dereq_("./modal")["default"] || _dereq_("./modal");
@@ -131,7 +234,7 @@ function findParent(trigger) {
   if (parent instanceof ModalComponent) return parent;
   return findParent(parent);
 }
-},{"./modal":4}],4:[function(_dereq_,module,exports){
+},{"./modal":5}],5:[function(_dereq_,module,exports){
 "use strict";
 // http://www.w3.org/TR/wai-aria-practices/#dialog_modal
 
@@ -148,12 +251,11 @@ var alias = Ember.computed.alias;
 
 var lastOpenedModal = null;
 
-window.addEventListener('focus', handleTabIntoBrowser, true);
+Ember.$(document).on('focusin', handleTabIntoBrowser);
 
 function handleTabIntoBrowser(event) {
-  if (!lastOpenedModal || event.target !== window) return;
-  Ember.run.later(lastOpenedModal, 'focus', 0);
-  event.preventDefault();
+  if (!lastOpenedModal) return;
+  lastOpenedModal.focus();
 }
 
 /**
@@ -279,9 +381,12 @@ exports["default"] = Ember.Component.extend({
       this.maybeMakeDefaultChildren();
       this.set('after-open', 'true');
       if (options.focus !== false) {
-        this.focus();
+        // after render because we want the the default close button to get focus
+        Ember.run.schedule('afterRender', this, 'focus');
       } else {
-        // focus the whole thing so that tab will work next time
+        // when options.focus is false it means we used the mouse, and designers hate
+        // focus styles showing up, so lets not do that. Instead, focus the whole thing
+        // so that tab will work next time.
         this.$().focus();
       }
     });
@@ -306,18 +411,24 @@ exports["default"] = Ember.Component.extend({
   },
 
   /**
-   * We need to focus the first tabbable element so that keyboard and
-   * screenreader users end up in the right place after the dialog is
-   * opened (or when the users tabs back into the browser window from
-   * the browser chrome). There should always be a close button, and
-   * therefore always something to focus.
+   * We need to focus an element so that keyboard and screenreader users end up
+   * in the right place after the dialog is opened (or when the users tabs back
+   * into the browser window from the browser chrome).
    *
    * @method focus
    * @private
    */
 
   focus: function() {
-    this.$(':tabbable').first().focus();
+    if (this.get('element').contains(document.activeElement)) {
+      // just let it be if we already contain the activeElement
+      return;
+    }
+    var target = this.$('[autofocus]');
+    if (!target.length) target = this.$(':tabbable');
+    // maybe they destroyed the close button? this shoudn't happen but could
+    if (!target.length) target = this.$();
+    target.first().focus();
   },
 
   /**
@@ -505,7 +616,7 @@ exports["default"] = Ember.Component.extend({
   }
 
 });
-},{}],5:[function(_dereq_,module,exports){
+},{}],6:[function(_dereq_,module,exports){
 "use strict";
 /*!
  * Adapted from jQuery UI core
@@ -546,7 +657,7 @@ if (!$.expr[':'].tabbable) {
     return ( isTabIndexNaN || tabIndex >= 0 ) && focusable( element, !isTabIndexNaN );
   }
 };
-},{}],6:[function(_dereq_,module,exports){
+},{}],7:[function(_dereq_,module,exports){
 "use strict";
 var Ember = window.Ember["default"] || window.Ember;
 exports["default"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
@@ -555,10 +666,10 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   
 
 
-  data.buffer.push("ic-modal {\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  background-color: hsla(0, 0%, 100%, .75);\n  display: none;\n  align-items: center;\n}\n\nic-modal[is-open] {\n  display: flex;\n}\n\nic-modal-content {\n  position: relative;\n  display: flex;\n  flex-direction: column;\n  align-content: stretch;\n  max-height: 90%;\n  width: 66%;\n  margin: auto;\n  background: #fff;\n  border: 1px solid hsl(0, 0%, 70%);\n  border-radius: 4px;\n}\n\nic-modal-title {\n  flex: 0 0 auto;\n  padding: 20px;\n  border-bottom: 1px solid hsl(0, 0%, 85%);\n}\n\nic-modal-main {\n  flex: 0 1 auto;\n  overflow: auto;\n  padding: 20px;\n}\n\n.ic-modal-trigger.default {\n  position: absolute;\n  top: 10px;\n  right: 10px;\n  border: none;\n  background: none;\n  padding: 6px;\n  font-size: 18px;\n  color: inherit;\n}\n\n.ic-modal-trigger.default:focus {\n  text-shadow: 0 0 6px hsl(208, 47%, 60%),\n    0 0 2px hsl(208, 47%, 60%),\n    0 0 2px hsl(208, 47%, 60%),\n    0 0 1px hsl(208, 47%, 60%);\n  outline: none;\n}\n\n@media only screen and (max-width : 480px) {\n  ic-modal-content {\n    width: 95%;\n  }\n  ic-modal-title,\n  ic-modal-main {\n    padding: 10px;\n  }\n\n  .ic-modal-trigger.default {\n    top: 0px;\n    right: 2px;\n  }\n}\n\n\n");
+  data.buffer.push("ic-modal,\n.ic-modal-form {\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  background-color: hsla(0, 0%, 100%, .75);\n  display: none;\n}\n\nic-modal-main {\n  position: relative;\n  max-height: 90%;\n  width: 66%;\n  margin: auto;\n  background: #fff;\n  border: 1px solid hsl(0, 0%, 70%);\n  border-radius: 4px;\n}\n\nic-modal-title {\n  padding: 20px;\n  border-bottom: 1px solid hsl(0, 0%, 85%);\n}\n\nic-modal-footer {\n  padding: 20px;\n  border-top: 1px solid hsl(0, 0%, 85%);\n}\n\nic-modal-content {\n  overflow: auto;\n  padding: 20px;\n}\n\n.ic-modal-trigger.default {\n  position: absolute;\n  top: 10px;\n  right: 10px;\n  border: none;\n  background: none;\n  padding: 6px;\n  font-size: 18px;\n  color: inherit;\n}\n\n.ic-modal-trigger.default:focus {\n  text-shadow: 0 0 6px hsl(208, 47%, 60%),\n    0 0 2px hsl(208, 47%, 60%),\n    0 0 2px hsl(208, 47%, 60%),\n    0 0 1px hsl(208, 47%, 60%);\n  outline: none;\n}\n\n@media only screen and (max-width : 480px) {\n  ic-modal-main {\n    width: 95%;\n    max-height: 95%;\n  }\n  ic-modal-title,\n  ic-modal-footer,\n  ic-modal-content {\n    padding: 10px;\n  }\n\n  .ic-modal-trigger.default {\n    top: 0px;\n    right: 2px;\n  }\n}\n\n/* yes, this is a lot of css, but the result is FANTASTIC */\n\nic-modal[is-open],\n.ic-modal-form[is-open] {\n  display: -webkit-box;\n  display: -moz-box;\n  display: -ms-flexbox;\n  display: -webkit-flex;\n  display: flex;\n  -webkit-box-align: center;\n  -moz-box-align: center;\n  -webkit-align-items: center;\n  -ms-flex-align: center;\n  align-items: center;\n}\n\nic-modal-main {\n  display: -webkit-box;\n  display: -moz-box;\n  display: -ms-flexbox;\n  display: -webkit-flex;\n  display: flex;\n  -webkit-box-direction: normal;\n  -moz-box-direction: normal;\n  -webkit-box-orient: vertical;\n  -moz-box-orient: vertical;\n  -webkit-flex-direction: column;\n  -ms-flex-direction: column;\n  flex-direction: column;\n  -webkit-flex-wrap: nowrap;\n  -ms-flex-wrap: nowrap;\n  flex-wrap: nowrap;\n  -webkit-box-pack: start;\n  -moz-box-pack: start;\n  -webkit-justify-content: flex-start;\n  -ms-flex-pack: start;\n  justify-content: flex-start;\n  -webkit-align-content: flex-start;\n  -ms-flex-line-pack: start;\n  align-content: flex-start;\n  -webkit-box-align: stretch;\n  -moz-box-align: stretch;\n  -webkit-align-items: stretch;\n  -ms-flex-align: stretch;\n  align-items: stretch;\n}\n\nic-modal-title,\nic-modal-footer {\n  -webkit-box-flex: 0;\n  -moz-box-flex: 0;\n  -webkit-flex: 0 0 auto;\n  -ms-flex: 0 0 auto;\n  flex: 0 0 auto;\n  -webkit-align-self: auto;\n  -ms-flex-item-align: auto;\n  align-self: auto;\n}\n\nic-modal-content {\n  -webkit-box-flex: 1;\n  -moz-box-flex: 1;\n  -webkit-flex: 1 1 auto;\n  -ms-flex: 1 1 auto;\n  flex: 1 1 auto;\n  -webkit-align-self: auto;\n  -ms-flex-item-align: auto;\n  align-self: auto;\n}\n\n");
   
 });
-},{}],7:[function(_dereq_,module,exports){
+},{}],8:[function(_dereq_,module,exports){
 "use strict";
 var Ember = window.Ember["default"] || window.Ember;
 exports["default"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
@@ -569,16 +680,16 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
 function program1(depth0,data) {
   
   var buffer = '', stack1;
-  data.buffer.push("\n  <ic-modal-content>\n\n    ");
+  data.buffer.push("\n  <ic-modal-main>\n\n    ");
   stack1 = helpers['if'].call(depth0, "makeTitle", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(2, program2, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n\n    ");
   stack1 = helpers['if'].call(depth0, "makeTrigger", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(5, program5, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n\n    <ic-modal-main>\n      ");
+  data.buffer.push("\n\n    ");
   stack1 = helpers._triageMustache.call(depth0, "yield", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n    </ic-modal-main>\n\n  </ic-modal-content>\n");
+  data.buffer.push("\n\n  </ic-modal-main>\n");
   return buffer;
   }
 function program2(depth0,data) {

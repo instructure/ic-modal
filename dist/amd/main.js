@@ -1,22 +1,28 @@
 define(
-  ["./modal","./modal-trigger","./modal-title","./templates/modal-css","./templates/modal","ember","./tabbable-selector","exports"],
-  function(__dependency1__, __dependency2__, __dependency3__, __dependency4__, __dependency5__, __dependency6__, __dependency7__, __exports__) {
+  ["./modal","./modal-form","./modal-trigger","./modal-title","./templates/modal-css","./templates/modal","ember","./tabbable-selector","exports"],
+  function(__dependency1__, __dependency2__, __dependency3__, __dependency4__, __dependency5__, __dependency6__, __dependency7__, __dependency8__, __exports__) {
     "use strict";
     var ModalComponent = __dependency1__["default"] || __dependency1__;
-    var ModalTriggerComponent = __dependency2__["default"] || __dependency2__;
-    var ModalTitleComponent = __dependency3__["default"] || __dependency3__;
-    var css = __dependency4__["default"] || __dependency4__;
-    var modalTemplate = __dependency5__["default"] || __dependency5__;
-    var Application = __dependency6__.Application;
+    var ModalFormComponent = __dependency2__["default"] || __dependency2__;
+    var ModalTriggerComponent = __dependency3__["default"] || __dependency3__;
+    var ModalTitleComponent = __dependency4__["default"] || __dependency4__;
+    var css = __dependency5__["default"] || __dependency5__;
+    var modalTemplate = __dependency6__["default"] || __dependency6__;
+    var Application = __dependency7__.Application;
 
     Application.initializer({
       name: 'ic-modal',
       initialize: function(container) {
         container.register('component:ic-modal', ModalComponent);
+        container.register('component:ic-modal-form', ModalFormComponent);
+        container.register('component:ic-modal-content', Ember.Component.extend({tagName: 'ic-modal-content'}));
+        container.register('component:ic-modal-footer', Ember.Component.extend({tagName: 'ic-modal-footer'}));
         container.register('component:ic-modal-trigger', ModalTriggerComponent);
         container.register('component:ic-modal-title', ModalTitleComponent);
         container.register('template:components/ic-modal-css', css);
+        container.register('template:components/ic-modal-form-css', css);
         container.register('template:components/ic-modal', modalTemplate);
+        container.register('template:components/ic-modal-form', modalTemplate);
       }
     });
 
