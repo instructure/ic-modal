@@ -7,19 +7,10 @@ ic-modal,
   bottom: 0;
   background-color: hsla(0, 0%, 100%, .75);
   display: none;
-  align-items: center;
-}
-
-ic-modal[is-open],
-.ic-modal-form[is-open] {
-  display: flex;
 }
 
 ic-modal-main {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  align-content: stretch;
   max-height: 90%;
   width: 66%;
   margin: auto;
@@ -29,19 +20,16 @@ ic-modal-main {
 }
 
 ic-modal-title {
-  flex: none;
   padding: 20px;
   border-bottom: 1px solid hsl(0, 0%, 85%);
 }
 
 ic-modal-footer {
-  flex: none;
   padding: 20px;
   border-top: 1px solid hsl(0, 0%, 85%);
 }
 
 ic-modal-content {
-  flex: 1 1 auto;
   overflow: auto;
   padding: 20px;
 }
@@ -82,4 +70,73 @@ ic-modal-content {
   }
 }
 
+/* yes, this is a lot of css, but the result is FANTASTIC */
+
+ic-modal[is-open],
+.ic-modal-form[is-open] {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+ic-modal-main {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-direction: normal;
+  -moz-box-direction: normal;
+  -webkit-box-orient: vertical;
+  -moz-box-orient: vertical;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: start;
+  -moz-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  -webkit-align-content: flex-start;
+  -ms-flex-line-pack: start;
+  align-content: flex-start;
+  -webkit-box-align: stretch;
+  -moz-box-align: stretch;
+  -webkit-align-items: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch;
+}
+
+ic-modal-title,
+ic-modal-footer {
+  -webkit-box-flex: 0;
+  -moz-box-flex: 0;
+  -webkit-flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  -webkit-align-self: auto;
+  -ms-flex-item-align: auto;
+  align-self: auto;
+}
+
+ic-modal-content {
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  -webkit-align-self: auto;
+  -ms-flex-item-align: auto;
+  align-self: auto;
+}
 
