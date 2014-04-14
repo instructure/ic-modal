@@ -9,7 +9,9 @@
       {{#ic-modal-trigger class="default" aria-label="close"}}×{{/ic-modal-trigger}}
     {{/if}}
 
-    {{yield}}
+    <ic-modal-main>
+      {{yield}}
+    </ic-modal-main>
 
   </ic-modal-content>
 {{/if}}
