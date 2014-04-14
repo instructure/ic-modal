@@ -1,3 +1,11 @@
+v0.0.3
+Mon, 14 Apr 2014 06:35:15 GMT
+
+95438af [added] overflow + responsive styles
+d05173a [changed] template to only render content if open
+a5f2022 [added] on-open, on-close, on-toggle actions
+
+
 v0.0.2
 Sun, 13 Apr 2014 14:49:12 GMT
 

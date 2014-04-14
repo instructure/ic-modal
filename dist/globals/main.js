@@ -33,8 +33,7 @@ exports["default"] = Ember.Component.extend({
 
   /**
    * Tells the screenreader not to read this element. The modal has its
-   * 'aria-describedby' set to the id of this element so it would be
-   * redundant.
+   * 'aria-labelledby' set to the id of this element so it would be redundant.
    *
    * @property aria-hidden
    */
@@ -53,11 +52,10 @@ exports["default"] = Ember.Component.extend({
 });
 },{}],3:[function(_dereq_,module,exports){
 "use strict";
-var Component = window.Ember.Component;
-var computed = window.Ember.computed;
+var Ember = window.Ember["default"] || window.Ember;
 var ModalComponent = _dereq_("./modal")["default"] || _dereq_("./modal");
 
-exports["default"] = Component.extend({
+exports["default"] = Ember.Component.extend({
 
   classNames: ['ic-modal-trigger'],
 
@@ -78,7 +76,7 @@ exports["default"] = Component.extend({
   tagName: 'button',
 
   /**
-   * Finds the modal this element controls. If a toggler is a child of
+   * Finds the modal this element controls. If a trigger is a child of
    * the modal, you do not need to specify a "controls" attribute.
    *
    * @method findModal
@@ -107,6 +105,7 @@ exports["default"] = Component.extend({
    */
 
   toggleModalVisibility: function(event) {
+    this.sendAction('on-toggle', this);
     // don't focus if it was a mouse click, cause that's ugly
     var wasMouse = event.clientX && event.clientY;
     this.get('modal').toggleVisibility(this, {focus: !wasMouse});
@@ -170,7 +169,7 @@ exports["default"] = Ember.Component.extend({
   attributeBindings: [
     'after-open',
     'aria-hidden',
-    'aria-labeledby',
+    'aria-labelledby',
     'is-open',
     'role',
     'tabindex'
@@ -228,11 +227,11 @@ exports["default"] = Ember.Component.extend({
    * When the dialog opens the screenreader will get the label from the
    * title component
    *
-   * @property aria-labeledby
+   * @property aria-labelledby
    * @private
    */
 
-  'aria-labeledby': alias('titleComponent.elementId'),
+  'aria-labelledby': alias('titleComponent.elementId'),
 
   /**
    * Used as a bound attribute so you can style modals with
@@ -273,9 +272,11 @@ exports["default"] = Ember.Component.extend({
 
   open: function(options) {
     options = options || {};
+    this.sendAction('on-open', this);
     this.set('isOpen', true);
     lastOpenedModal = this;
     Ember.run.schedule('afterRender', this, function() {
+      this.maybeMakeDefaultChildren();
       this.set('after-open', 'true');
       if (options.focus !== false) {
         this.focus();
@@ -296,6 +297,7 @@ exports["default"] = Ember.Component.extend({
    */
 
   close: function() {
+    this.sendAction('on-close', this);
     this.set('isOpen', false);
     this.set('after-open', null);
     lastOpenedModal = null;
@@ -482,7 +484,7 @@ exports["default"] = Ember.Component.extend({
   maybeMakeDefaultChildren: function() {
     if (!this.get('titleComponent')) this.set('makeTitle', true);
     if (!this.get('triggerComponent')) this.set('makeTrigger', true);
-  }.on('didInsertElement'),
+  },
 
   /**
    * @method registerTitle
@@ -553,7 +555,7 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   
 
 
-  data.buffer.push("ic-modal-screen,\nic-modal,\nic-modal-content,\nic-modal-title {\n  display: block;\n}\n\nic-modal {\n  background-color: rgba(255, 255, 255, .75);\n  display: none;\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  padding: 10px;\n}\n\nic-modal[is-open] {\n  display: block;\n}\n\nic-modal-content {\n  background: #fff;\n  border: 1px solid hsl(0, 0%, 70%);\n  position: relative;\n  max-width: 800px;\n  margin: 40px auto;\n  border-radius: 4px;\n  padding: 20px;\n}\n\nic-modal-title {\n  border-bottom: 1px solid hsl(0, 0%, 90%);\n  padding: 0 20px 20px 20px;\n  margin: 0 -20px 20px -20px;\n  font-weight: 600;\n}\n\n.ic-modal-trigger.default {\n  position: absolute;\n  top: 10px;\n  right: 10px;\n  border: none;\n  background: none;\n  padding: 6px;\n  font-size: 18px;\n  color: inherit;\n}\n\n.ic-modal-trigger.default:focus {\n  text-shadow: 0 0 6px hsl(208, 47%, 60%),\n    0 0 2px hsl(208, 47%, 60%),\n    0 0 2px hsl(208, 47%, 60%),\n    0 0 1px hsl(208, 47%, 60%);\n  outline: none;\n}\n\n");
+  data.buffer.push("ic-modal {\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  background-color: hsla(0, 0%, 100%, .75);\n  display: none;\n  align-items: center;\n}\n\nic-modal[is-open] {\n  display: flex;\n}\n\nic-modal-content {\n  position: relative;\n  display: flex;\n  flex-direction: column;\n  align-content: stretch;\n  max-height: 90%;\n  width: 66%;\n  margin: auto;\n  background: #fff;\n  border: 1px solid hsl(0, 0%, 70%);\n  border-radius: 4px;\n}\n\nic-modal-title {\n  flex: 0 0 auto;\n  padding: 20px;\n  border-bottom: 1px solid hsl(0, 0%, 85%);\n}\n\nic-modal-main {\n  flex: 0 1 auto;\n  overflow: auto;\n  padding: 20px;\n}\n\n.ic-modal-trigger.default {\n  position: absolute;\n  top: 10px;\n  right: 10px;\n  border: none;\n  background: none;\n  padding: 6px;\n  font-size: 18px;\n  color: inherit;\n}\n\n.ic-modal-trigger.default:focus {\n  text-shadow: 0 0 6px hsl(208, 47%, 60%),\n    0 0 2px hsl(208, 47%, 60%),\n    0 0 2px hsl(208, 47%, 60%),\n    0 0 1px hsl(208, 47%, 60%);\n  outline: none;\n}\n\n@media only screen and (max-width : 480px) {\n  ic-modal-content {\n    width: 95%;\n  }\n  ic-modal-title,\n  ic-modal-main {\n    padding: 10px;\n  }\n\n  .ic-modal-trigger.default {\n    top: 0px;\n    right: 2px;\n  }\n}\n\n\n");
   
 });
 },{}],7:[function(_dereq_,module,exports){
@@ -566,50 +568,58 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
 
 function program1(depth0,data) {
   
-  var buffer = '', stack1, helper, options;
-  data.buffer.push("\n    ");
-  options={hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(2, program2, data),contexts:[],types:[],data:data}
-  if (helper = helpers['ic-modal-title']) { stack1 = helper.call(depth0, options); }
-  else { helper = (depth0 && depth0['ic-modal-title']); stack1 = typeof helper === functionType ? helper.call(depth0, options) : helper; }
-  if (!helpers['ic-modal-title']) { stack1 = blockHelperMissing.call(depth0, 'ic-modal-title', {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(2, program2, data),contexts:[],types:[],data:data}); }
+  var buffer = '', stack1;
+  data.buffer.push("\n  <ic-modal-content>\n\n    ");
+  stack1 = helpers['if'].call(depth0, "makeTitle", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(2, program2, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n  ");
+  data.buffer.push("\n\n    ");
+  stack1 = helpers['if'].call(depth0, "makeTrigger", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(5, program5, data),contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n\n    <ic-modal-main>\n      ");
+  stack1 = helpers._triageMustache.call(depth0, "yield", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n    </ic-modal-main>\n\n  </ic-modal-content>\n");
   return buffer;
   }
 function program2(depth0,data) {
+  
+  var buffer = '', stack1, helper, options;
+  data.buffer.push("\n      ");
+  options={hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(3, program3, data),contexts:[],types:[],data:data}
+  if (helper = helpers['ic-modal-title']) { stack1 = helper.call(depth0, options); }
+  else { helper = (depth0 && depth0['ic-modal-title']); stack1 = typeof helper === functionType ? helper.call(depth0, options) : helper; }
+  if (!helpers['ic-modal-title']) { stack1 = blockHelperMissing.call(depth0, 'ic-modal-title', {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(3, program3, data),contexts:[],types:[],data:data}); }
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n    ");
+  return buffer;
+  }
+function program3(depth0,data) {
   
   
   data.buffer.push("Modal Content");
   }
 
-function program4(depth0,data) {
+function program5(depth0,data) {
   
   var buffer = '', stack1, helper, options;
-  data.buffer.push("\n    ");
+  data.buffer.push("\n      ");
   stack1 = (helper = helpers['ic-modal-trigger'] || (depth0 && depth0['ic-modal-trigger']),options={hash:{
     'class': ("default"),
     'aria-label': ("close")
-  },hashTypes:{'class': "STRING",'aria-label': "STRING"},hashContexts:{'class': depth0,'aria-label': depth0},inverse:self.noop,fn:self.program(5, program5, data),contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "ic-modal-trigger", options));
+  },hashTypes:{'class': "STRING",'aria-label': "STRING"},hashContexts:{'class': depth0,'aria-label': depth0},inverse:self.noop,fn:self.program(6, program6, data),contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "ic-modal-trigger", options));
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n  ");
+  data.buffer.push("\n    ");
   return buffer;
   }
-function program5(depth0,data) {
+function program6(depth0,data) {
   
   
   data.buffer.push("×");
   }
 
-  data.buffer.push("<ic-modal-content>\n\n  ");
-  stack1 = helpers['if'].call(depth0, "makeTitle", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],data:data});
+  stack1 = helpers['if'].call(depth0, "isOpen", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n\n  ");
-  stack1 = helpers['if'].call(depth0, "makeTrigger", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(4, program4, data),contexts:[depth0],types:["ID"],data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n\n  ");
-  stack1 = helpers._triageMustache.call(depth0, "yield", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n\n</ic-modal-content>\n\n");
+  data.buffer.push("\n\n");
   return buffer;
   
 });
