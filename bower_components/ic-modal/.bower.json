@@ -1,6 +1,6 @@
 {
   "name": "ic-modal",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "authors": [
     "Ryan Florence <rpflorence@gmail.com>"
   ],
@@ -29,13 +29,13 @@
     "ic-styled": "~1.1.6"
   },
   "homepage": "https://github.com/instructure/ic-modal",
-  "_release": "0.0.3",
+  "_release": "0.0.5",
   "_resolution": {
     "type": "version",
-    "tag": "v0.0.3",
-    "commit": "dc18350824f89d9e6dc4783e71b842bb8da0ee98"
+    "tag": "v0.0.5",
+    "commit": "5389a0bec47839723ca0e33edd5ddfeab549daf4"
   },
   "_source": "git://github.com/instructure/ic-modal.git",
-  "_target": "~0.0.3",
+  "_target": "~0.0.5",
   "_originalSource": "ic-modal"
 }

@@ -1,3 +1,18 @@
+v0.0.5
+Mon, 14 Apr 2014 21:48:47 GMT
+
+
+
+
+v0.0.4
+Mon, 14 Apr 2014 21:47:36 GMT
+
+ac39deb [fixed] cross-browser flex styles
+ade7fa6 [added] modal-form
+0ab8200 [fixed] focus from other tabs, browser chrome, etc
+4dd92fc [added] ic-modal-content, ic-modal-footer
+
+
 v0.0.3
 Mon, 14 Apr 2014 06:35:15 GMT
 

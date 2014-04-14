@@ -1,0 +1,114 @@
+<!doctype html public "restrooms are gross">
+<meta charset="utf-8">
+<title>ic-modal demo, recycled modal</title>
+<link rel="stylesheet" href="http://instructure.github.io/ic-ember/shared/styles.css">
+<style>
+#new-user-form[awaiting-return-value] ic-modal-main {
+  opacity: 0.5;
+}
+</style>
+
+<header class="branding padbox">
+  <h1>{{ic-modal}}</h1>
+  <h2>an accessible ember modal component</h2>
+  <p>By <a target="_top" href="http://instructure.com">Instructure, Inc</a></p>
+  <ul class="navbar" role="nav">
+    <li><a href="index.html">basic</a>
+    <li><a href="modal-form.html" class="active">ic-modal-form</a>
+    <li><a href="recycled-modal.html">recycled modal</a>
+  </ul>
+</header>
+
+<a class="source-link" href="https://github.com/instructure/ic-modal/blob/gh-pages/modal-form.html">Demo Source</a>
+
+<a target="_top" href="https://github.com/instructure/ic-modal"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://github-camo.global.ssl.fastly.net/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png"></a>
+
+<div id="demo" class="padbox"></div>
+
+<script type="text/x-handlebars">
+{{#ic-modal-trigger controls="new-user-form"}}
+  New User
+{{/ic-modal-trigger}}
+
+<ul>
+  {{#each users}}
+    <li>{{name}} ({{id}})</li>
+  {{/each}}
+</ul>
+
+{{#ic-modal-form
+  id="new-user-form"
+  on-submit="submitForm"
+  awaiting-return-value=saving
+  on-invalid-close="handleCloseWhileSaving"
+}}
+
+  {{#ic-modal-content}}
+    <label for="name">Name</label>
+    {{input id="name" value=newUser.name disabled=saving}}
+  {{/ic-modal-content}}
+
+  {{#ic-modal-footer}}
+    {{#if saving}}
+      saving...
+    {{else}}
+      {{#ic-modal-trigger type="button"}}Cancel{{/ic-modal-trigger}}
+      <button type="submit">Save</button>
+    {{/if}}
+  {{/ic-modal-footer}}
+
+{{/ic-modal-form}}
+</script>
+
+<script src="bower_components/jquery/dist/jquery.js"></script>
+<script src="bower_components/handlebars/handlebars.js"></script>
+<script src="bower_components/ember/ember.js"></script>
+<script src="bower_components/ic-styled/main.js"></script>
+<script src="bower_components/ic-modal/dist/globals/main.js"></script>
+
+<script>
+// need to add this back into master
+ic.modal.ModalTriggerComponent.reopen({
+  attributeBindings: ['type']
+});
+
+App = Ember.Application.create({rootElement: '#demo'});
+App.ApplicationController = Ember.Controller.extend({
+
+  users: [
+    {id: 0, name: 'Joe'},
+    {id: 1, name: 'Jane'},
+    {id: 2, name: 'Susan'},
+    {id: 3, name: 'Carl'}
+  ],
+
+  newUser: {},
+
+  actions: {
+
+    submitForm: function(modal, event) {
+      var newUser = this.get('newUser');
+      event.returnValue = saveUser(newUser).then(function(json) {
+        this.users.addObject(json);
+        this.set('newUser', {});
+      }.bind(this));
+    },
+
+    handleCloseWhileSaving: function(modal) {
+      alert("Hold your horses, we're still saving stuff");
+    }
+  }
+});
+
+var fakeId = 5;
+
+function saveUser(obj) {
+  // pretend with me like this is an ajax request
+  return new Ember.RSVP.Promise(function(resolve, reject) {
+    Ember.run.later(function() {
+      var id = fakeId++;
+      resolve({id: id, name: obj.name});
+    }, 2000);
+  });
+}
+</script>

@@ -1,25 +1,59 @@
 <!doctype html public "restrooms are gross">
 <meta charset="utf-8">
-<title>ic-modal demo: shared modal</title>
+<title>ic-modal demo, recycled modal</title>
 <link rel="stylesheet" href="http://instructure.github.io/ic-ember/shared/styles.css">
+<style>
+ic-modal[is-open].fade-in {
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+
+ic-modal[after-open].fade-in {
+  opacity: 1;
+}
+
+</style>
 
 <header class="branding padbox">
   <h1>{{ic-modal}}</h1>
   <h2>an accessible ember modal component</h2>
   <p>By <a target="_top" href="http://instructure.com">Instructure, Inc</a></p>
+  <ul class="navbar" role="nav">
+    <li><a href="index.html">basic</a>
+    <li><a href="modal-form.html">ic-modal-form</a>
+    <li><a href="recycled-modal.html" class="active">recycled modal</a>
+  </ul>
 </header>
 
-<a class="source-link" href="https://github.com/instructure/ic-modal/blob/gh-pages/index.html">Demo Source</a>
+<a class="source-link" href="https://github.com/instructure/ic-modal/blob/gh-pages/recycled-modal.html">Demo Source</a>
 
 <a target="_top" href="https://github.com/instructure/ic-modal"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://github-camo.global.ssl.fastly.net/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png"></a>
 
 <div id="demo" class="padbox"></div>
 
 <script type="text/x-handlebars">
-
-{{#each user}}
-  <div class="user">{{name}} {{#ic-modal-trigger controls="edit-user"}}
+{{#each users}}
+  <div>
+    {{name}}
+    {{#ic-modal-trigger
+      controls="edit-user"
+      on-toggle="setModalModel"
+      user=this
+    }}edit{{/ic-modal-trigger}}
+  </div>
 {{/each}}
+
+{{#ic-modal id="edit-user"}}
+  {{#ic-modal-content}}
+    <p>
+      <label for="user-name">User Name</label><br>
+      {{input id="user-name" value=editedUser.name}}
+    </p>
+    <p>
+      {{#ic-modal-trigger}}Done{{/ic-modal-trigger}}
+    </p>
+  {{/ic-modal-content}}
+{{/ic-modal}}
 
 </script>
 
@@ -29,12 +63,19 @@
 <script src="bower_components/ic-styled/main.js"></script>
 <script src="bower_components/ic-modal/dist/globals/main.js"></script>
 <script>
-  App = Ember.Application.create({ rootElement: '#demo' });
+  App = Ember.Application.create({rootElement: '#demo'});
   App.ApplicationController = Ember.Controller.extend({
-    formWasSubmitted: false,
+
+    users: [
+      {name: 'Ryan'},
+      {name: 'Merrick'}
+    ],
+
+    editingUser: false,
+
     actions: {
-      submitForm: function() {
-        this.set('formWasSubmitted', true);
+      setModalModel: function(trigger) {
+        this.set('editedUser', trigger.get('user'));
       }
     }
   });

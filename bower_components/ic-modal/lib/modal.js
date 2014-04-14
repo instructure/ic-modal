@@ -13,12 +13,11 @@ var alias = Ember.computed.alias;
 
 var lastOpenedModal = null;
 
-window.addEventListener('focus', handleTabIntoBrowser, true);
+Ember.$(document).on('focusin', handleTabIntoBrowser);
 
 function handleTabIntoBrowser(event) {
-  if (!lastOpenedModal || event.target !== window) return;
-  Ember.run.later(lastOpenedModal, 'focus', 0);
-  event.preventDefault();
+  if (!lastOpenedModal) return;
+  lastOpenedModal.focus();
 }
 
 /**
@@ -144,9 +143,12 @@ export default Ember.Component.extend({
       this.maybeMakeDefaultChildren();
       this.set('after-open', 'true');
       if (options.focus !== false) {
-        this.focus();
+        // after render because we want the the default close button to get focus
+        Ember.run.schedule('afterRender', this, 'focus');
       } else {
-        // focus the whole thing so that tab will work next time
+        // when options.focus is false it means we used the mouse, and designers hate
+        // focus styles showing up, so lets not do that. Instead, focus the whole thing
+        // so that tab will work next time.
         this.$().focus();
       }
     });
@@ -171,18 +173,24 @@ export default Ember.Component.extend({
   },
 
   /**
-   * We need to focus the first tabbable element so that keyboard and
-   * screenreader users end up in the right place after the dialog is
-   * opened (or when the users tabs back into the browser window from
-   * the browser chrome). There should always be a close button, and
-   * therefore always something to focus.
+   * We need to focus an element so that keyboard and screenreader users end up
+   * in the right place after the dialog is opened (or when the users tabs back
+   * into the browser window from the browser chrome).
    *
    * @method focus
    * @private
    */
 
   focus: function() {
-    this.$(':tabbable').first().focus();
+    if (this.get('element').contains(document.activeElement)) {
+      // just let it be if we already contain the activeElement
+      return;
+    }
+    var target = this.$('[autofocus]');
+    if (!target.length) target = this.$(':tabbable');
+    // maybe they destroyed the close button? this shoudn't happen but could
+    if (!target.length) target = this.$();
+    target.first().focus();
   },
 
   /**
