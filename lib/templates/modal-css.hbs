@@ -13,7 +13,7 @@ ic-modal[is-open] {
   display: flex;
 }
 
-ic-modal-content {
+ic-modal-main {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -32,7 +32,13 @@ ic-modal-title {
   border-bottom: 1px solid hsl(0, 0%, 85%);
 }
 
-ic-modal-main {
+ic-modal-footer {
+  flex: 0 0 auto;
+  padding: 20px;
+  border-top: 1px solid hsl(0, 0%, 85%);
+}
+
+ic-modal-content {
   flex: 0 1 auto;
   overflow: auto;
   padding: 20px;
@@ -58,11 +64,13 @@ ic-modal-main {
 }
 
 @media only screen and (max-width : 480px) {
-  ic-modal-content {
+  ic-modal-main {
     width: 95%;
+    max-height: 95%;
   }
   ic-modal-title,
-  ic-modal-main {
+  ic-modal-footer,
+  ic-modal-content {
     padding: 10px;
   }
 

@@ -1,5 +1,5 @@
 {{#if isOpen}}
-  <ic-modal-content>
+  <ic-modal-main>
 
     {{#if makeTitle}}
       {{#ic-modal-title}}Modal Content{{/ic-modal-title}}
@@ -9,10 +9,8 @@
       {{#ic-modal-trigger class="default" aria-label="close"}}×{{/ic-modal-trigger}}
     {{/if}}
 
-    <ic-modal-main>
-      {{yield}}
-    </ic-modal-main>
+    {{yield}}
 
-  </ic-modal-content>
+  </ic-modal-main>
 {{/if}}
 
