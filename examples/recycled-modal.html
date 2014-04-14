@@ -15,13 +15,15 @@
 {{/each}}
 
 {{#ic-modal id="edit-user"}}
-  <p>
-    <label for="user-name">User Name</label><br>
-    {{input id="user-name" value=editedUser.name}}
-  </p>
-  <p>
-    {{#ic-modal-trigger}}Done{{/ic-modal-trigger}}
-  </p>
+  {{#ic-modal-content}}
+    <p>
+      <label for="user-name">User Name</label><br>
+      {{input id="user-name" value=editedUser.name}}
+    </p>
+    <p>
+      {{#ic-modal-trigger}}Done{{/ic-modal-trigger}}
+    </p>
+  {{/ic-modal-content}}
 {{/ic-modal}}
 
 </script>

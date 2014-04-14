@@ -46,12 +46,12 @@ You ought to know what you're doing if this is the case.
 `<script src="bower_components/ic-styled/main.js"></script>`
 `<script src="bower_components/ic-modal/dist/globals/main.js"></script>`
 
-Usage
------
+{{ic-modal}} Usage
+------------------
 
 In its simplest form:
 
-```handlebars
+```html
 {{#ic-modal-trigger controls="ohai"}}
   open the modal
 {{/ic-modal}}
@@ -61,7 +61,24 @@ In its simplest form:
 {{/ic-modal}}
 ```
 
-With all the bells and whistles:
+But that's going to look gross. One of the more difficult parts of
+building a modal dialog is the css, a dialog is usually one of three
+parts: title, content, and footer.
+
+```html
+{{#ic-modal id="ohai"}}
+  {{#ic-modal-title}}
+    Some title ...
+  {{/ic-modal-title}}  
+
+  {{#ic-modal-content}}
+    <div style="height: 1000px">Ohai!</div>
+    Scrolling is handled beautifully
+  {{/ic-modal-content}}
+{{/ic-modal}}
+```
+
+Here are all the bells and whistles:
 
 ```html
 <!--
@@ -76,9 +93,9 @@ With all the bells and whistles:
 
 <!--
   The "closed-when" attribute can be bound to a controller property. If
-  `tacosOrdered` gets set to `true` then the modal will close. Typically
-  you'll do something like this when a form has been successfully
-  submitted.
+  `tacosOrdered` gets set to `true` then the modal will close.
+
+  "open-when" is the same, but opposite.
 -->
 
 {{#ic-modal id="tacos" closed-when=tacosOrdered}}
@@ -86,7 +103,8 @@ With all the bells and whistles:
   <!-- 
     This is optional, but you really should provide your own title,
     it gets used in the UI and is important for screenreaders to tell the
-    user what modal they are in.
+    user what modal they are in. If you hate it, write some CSS to hide
+    it.
   -->
 
   {{#ic-modal-title}}Tacos{{/ic-modal-title}}
@@ -112,14 +130,108 @@ With all the bells and whistles:
 {{/ic-modal}}
 ```
 
+{{ic-modal-form}} Usage
+-----------------------
+
+One of the most common use-cases for a modal dialog is a form.
+
+```html
+<!-- we still use ic-modal-trigger -->
+{{#ic-modal-trigger controls="new-user-form"}}
+  open
+{{/ic-modal-trigger}}
+
+<!-- note this is ic-modal-form -->
+{{#ic-modal-form
+  id="new-user-form"
+
+  <!--
+    map the component's "on-submit" to controller's "submitForm",
+    the component handles the submit for you
+   -->
+  on-submit="submitForm"
+
+  <!--
+    bind component's "awaiting-return-value" to local "saving",
+    more on this in the js section
+  -->
+  awaiting-return-value=saving
+
+  <!-- same thing as above -->
+  on-invalid-close="handleCloseWhileSaving"
+}}
+
+  <!--
+    in here you are already a form, just add your form elements
+    to the ic-modal-content
+  -->
+
+  {{#ic-modal-content}}
+    <label for="name">Name</label>
+    {{input id="name" value=newUser.name}}
+  {{/ic-modal-content}}
+
+  <!-- and put your buttons in the footer -->
+
+  {{#ic-modal-footer}}
+    <!-- when "awaiting-return-value" is true, "saving" will be also -->
+    {{#if saving}}
+      saving ...
+    {{else}}
+      {{#ic-modal-trigger}}Cancel{{/ic-modal-trigger}}
+      <button type="submit">Save</button>
+    {{/if}}
+  {{/ic-modal-footer}}
+
+{{/ic-modal-form}}
+```
+
+```js
+App.ApplicationController = Ember.Controller.extend({
+
+  newUser: {},
+
+  actions: {
+
+    // this will be called when the user submits the form because we
+    // mapped it to the "on-submit" actions of the component
+    submitForm: function(modal, event) {
+
+      // If you set the event.returnValue to a promise, ic-modal-form
+      // will set its 'awaiting-return-value' to true, that's why our
+      // `{{#if saving}}` in the template works. You also get an
+      // attribute on the component to style it differently, see the css
+      // section about that. You don't need to set the `event.returnValue`.
+      event.returnValue = ic.ajax.request(newUserUrl).then(function(json) {
+        addUser(json);
+        this.set('newUser', {});
+      }.bind(this));
+    },
+
+    // if the user tries to close the component while the
+    // `event.returnValue` is stil resolving, this event is sent.
+    handleCloseWhileSaving: function(modal) {
+      alert("Hold your horses, we're still saving stuff");
+    }
+  }
+});
+```
+
+```css
+// while the promise is resolving, you can style the elements
+#new-user-form[awaiting-return-value] ic-modal-main {
+  opacity: 0.5;
+}
+```
+
 CSS
 ---
 
 ### Overriding styles
 
-This component ships with a bit of CSS to be usable out-of-the-box, but
-the design has been kept pretty minimal. See `templates/modal-css.hbs`
-to know what to override for your own design.
+This component ships with some CSS to be usable out-of-the-box, but the
+design has been kept pretty minimal. See `templates/modal-css.hbs` to
+know what to override for your own design.
 
 ### Animations
 
