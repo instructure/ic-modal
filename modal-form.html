@@ -43,6 +43,8 @@
   on-invalid-close="handleCloseWhileSaving"
 }}
 
+  {{#ic-modal-title}}Add New User{{/ic-modal-title}}
+
   {{#ic-modal-content}}
     <label for="name">Name</label>
     {{input id="name" value=newUser.name disabled=saving}}
