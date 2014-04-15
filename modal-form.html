@@ -43,7 +43,13 @@
   on-invalid-close="handleCloseWhileSaving"
 }}
 
-  {{#ic-modal-title}}Add New User{{/ic-modal-title}}
+  {{#ic-modal-title}}
+    {{#if saving}}
+      Saving New User...
+    {{else}}
+      Add New User
+    {{/if}}
+  {{/ic-modal-title}}
 
   {{#ic-modal-content}}
     <label for="name">Name</label>
@@ -51,12 +57,8 @@
   {{/ic-modal-content}}
 
   {{#ic-modal-footer}}
-    {{#if saving}}
-      saving...
-    {{else}}
-      {{#ic-modal-trigger type="button"}}Cancel{{/ic-modal-trigger}}
-      <button type="submit">Save</button>
-    {{/if}}
+    {{#ic-modal-trigger type="button" disabled=saving}}Cancel{{/ic-modal-trigger}}
+    <button type="submit" {{bind-attr disabled=saving}}>Save</button>
   {{/ic-modal-footer}}
 
 {{/ic-modal-form}}
@@ -71,7 +73,7 @@
 <script>
 // need to add this back into master
 ic.modal.ModalTriggerComponent.reopen({
-  attributeBindings: ['type']
+  attributeBindings: ['type', 'disabled']
 });
 
 App = Ember.Application.create({rootElement: '#demo'});
@@ -83,6 +85,8 @@ App.ApplicationController = Ember.Controller.extend({
     {id: 2, name: 'Susan'},
     {id: 3, name: 'Carl'}
   ],
+
+  saving: false,
 
   newUser: {},
 
