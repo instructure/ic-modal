@@ -46,7 +46,7 @@ define(
       var buffer = '', stack1, helper, options;
       data.buffer.push("\n      ");
       stack1 = (helper = helpers['ic-modal-trigger'] || (depth0 && depth0['ic-modal-trigger']),options={hash:{
-        'class': ("default"),
+        'class': ("ic-modal-close"),
         'aria-label': ("close")
       },hashTypes:{'class': "STRING",'aria-label': "STRING"},hashContexts:{'class': depth0,'aria-label': depth0},inverse:self.noop,fn:self.program(6, program6, data),contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "ic-modal-trigger", options));
       if(stack1 || stack1 === 0) { data.buffer.push(stack1); }

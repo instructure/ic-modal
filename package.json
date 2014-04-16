@@ -1,6 +1,6 @@
 {
   "name": "ic-modal",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "accessible modal ember component",
   "main": "dist/cjs/main",
   "tags": [
