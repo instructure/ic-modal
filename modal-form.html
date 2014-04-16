@@ -51,15 +51,15 @@
     {{/if}}
   {{/ic-modal-title}}
 
-  {{#ic-modal-content}}
+  <div>
     <label for="name">Name</label>
     {{input id="name" value=newUser.name disabled=saving}}
-  {{/ic-modal-content}}
+  </div>
 
-  {{#ic-modal-footer}}
+  <div>
     {{#ic-modal-trigger type="button" disabled=saving}}Cancel{{/ic-modal-trigger}}
     <button type="submit" {{bind-attr disabled=saving}}>Save</button>
-  {{/ic-modal-footer}}
+  </div>
 
 {{/ic-modal-form}}
 </script>

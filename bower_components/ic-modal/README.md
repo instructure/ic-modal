@@ -61,23 +61,6 @@ In its simplest form:
 {{/ic-modal}}
 ```
 
-But that's going to look gross. One of the more difficult parts of
-building a modal dialog is the css, a dialog is usually one of three
-parts: title, content, and footer.
-
-```html
-{{#ic-modal id="ohai"}}
-  {{#ic-modal-title}}
-    Some title ...
-  {{/ic-modal-title}}  
-
-  {{#ic-modal-content}}
-    <div style="height: 1000px">Ohai!</div>
-    Scrolling is handled beautifully
-  {{/ic-modal-content}}
-{{/ic-modal}}
-```
-
 Here are all the bells and whistles:
 
 ```html
@@ -161,19 +144,16 @@ One of the most common use-cases for a modal dialog is a form.
   on-invalid-close="handleCloseWhileSaving"
 }}
 
-  <!--
-    in here you are already a form, just add your form elements
-    to the ic-modal-content
-  -->
+  <!-- in here you are already a form, just add your form elements -->
 
-  {{#ic-modal-content}}
+  <fieldset>
     <label for="name">Name</label>
     {{input id="name" value=newUser.name}}
-  {{/ic-modal-content}}
+  </fieldset>
 
   <!-- and put your buttons in the footer -->
 
-  {{#ic-modal-footer}}
+  <fieldset>
     <!-- when "awaiting-return-value" is true, "saving" will be also -->
     {{#if saving}}
       saving ...
@@ -181,7 +161,7 @@ One of the most common use-cases for a modal dialog is a form.
       {{#ic-modal-trigger}}Cancel{{/ic-modal-trigger}}
       <button type="submit">Save</button>
     {{/if}}
-  {{/ic-modal-footer}}
+  </fieldset>
 
 {{/ic-modal-form}}
 ```
