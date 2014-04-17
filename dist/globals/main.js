@@ -4,7 +4,7 @@ var ModalComponent = _dereq_("./modal")["default"] || _dereq_("./modal");
 var ModalFormComponent = _dereq_("./modal-form")["default"] || _dereq_("./modal-form");
 var ModalTriggerComponent = _dereq_("./modal-trigger")["default"] || _dereq_("./modal-trigger");
 var ModalTitleComponent = _dereq_("./modal-title")["default"] || _dereq_("./modal-title");
-var css = _dereq_("./templates/modal-css")["default"] || _dereq_("./templates/modal-css");
+var modalCss = _dereq_("./templates/modal-css")["default"] || _dereq_("./templates/modal-css");
 var modalTemplate = _dereq_("./templates/modal")["default"] || _dereq_("./templates/modal");
 var Application = window.Ember.Application;
 _dereq_("./tabbable-selector");
@@ -15,16 +15,18 @@ Application.initializer({
     container.register('component:ic-modal-form', ModalFormComponent);
     container.register('component:ic-modal-trigger', ModalTriggerComponent);
     container.register('component:ic-modal-title', ModalTitleComponent);
-    container.register('template:components/ic-modal-css', css);
-    container.register('template:components/ic-modal-form-css', css);
+    container.register('template:components/ic-modal-css', modalCss);
+    container.register('template:components/ic-modal-form-css', modalCss);
     container.register('template:components/ic-modal', modalTemplate);
     container.register('template:components/ic-modal-form', modalTemplate);
   }
 });
 
 exports.ModalComponent = ModalComponent;
+exports.ModalFormComponent = ModalFormComponent;
 exports.ModalTriggerComponent = ModalTriggerComponent;
 exports.ModalTitleComponent = ModalTitleComponent;
+exports.modalCss = modalCss;
 },{"./modal":5,"./modal-form":2,"./modal-title":3,"./modal-trigger":4,"./tabbable-selector":6,"./templates/modal":8,"./templates/modal-css":7}],2:[function(_dereq_,module,exports){
 "use strict";
 var ModalComponent = _dereq_("./modal")["default"] || _dereq_("./modal");
@@ -160,7 +162,17 @@ exports["default"] = Ember.Component.extend({
 
   classNames: ['ic-modal-trigger'],
 
-  attributeBindings: ['aria-label'],
+  attributeBindings: [
+    'aria-label',
+    'disabled',
+    'type'
+  ],
+
+  /**
+   * We don't want triggers as the target for form submits from focused fields.
+   */
+
+  type: 'button',
 
   /**
    * We aren't using a tagName because we want these to always be
@@ -260,6 +272,9 @@ function handleTabIntoBrowser(event) {
  * Accessible modal dialog component.
  *
  * @class Modal
+ * @event willOpen
+ * @event didOpen
+ * @event willClose
  */
 
 exports["default"] = Ember.Component.extend({
@@ -372,12 +387,14 @@ exports["default"] = Ember.Component.extend({
 
   open: function(options) {
     options = options || {};
+    this.trigger('willOpen');
     this.sendAction('on-open', this);
     this.set('isOpen', true);
     lastOpenedModal = this;
     Ember.run.schedule('afterRender', this, function() {
       this.maybeMakeDefaultChildren();
       this.set('after-open', 'true');
+      this.trigger('didOpen');
       if (options.focus !== false) {
         // after render because we want the the default close button to get focus
         Ember.run.schedule('afterRender', this, 'focus');
@@ -400,6 +417,7 @@ exports["default"] = Ember.Component.extend({
    */
 
   close: function() {
+    this.trigger('willClose');
     this.sendAction('on-close', this);
     this.set('isOpen', false);
     this.set('after-open', null);
@@ -426,14 +444,14 @@ exports["default"] = Ember.Component.extend({
     if (!target.length) target = this.$(':tabbable');
     // maybe they destroyed the close button? this shoudn't happen but could
     if (!target.length) target = this.$();
-    target.first().focus();
+    target[0].focus();
   },
 
   /**
    * Shows or hides the modal, depending on current state.
    *
    * @method toggleVisibility
-   * @param toggler ic.modal.ToggleComponent
+   * @param toggler ToggleComponent
    * @param options Object
    * @public
    */
@@ -641,9 +659,10 @@ function focusable( element, isTabIndexNotNaN ) {
       isTabIndexNotNaN) && visible( element );
 }
 
-function visible( element ) {
-  return $.expr.filters.visible( element ) &&
-    !$( element ).parents().addBack().filter(function() {
+function visible(element) {
+  var $el = $(element);
+  return $.expr.filters.visible(element) &&
+    !$($el, $el.parents()).filter(function() {
       return $.css( this, "visibility" ) === "hidden";
     }).length;
 }

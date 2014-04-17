@@ -6,7 +6,7 @@ define("ic-modal",
     var ModalFormComponent = __dependency2__["default"] || __dependency2__;
     var ModalTriggerComponent = __dependency3__["default"] || __dependency3__;
     var ModalTitleComponent = __dependency4__["default"] || __dependency4__;
-    var css = __dependency5__["default"] || __dependency5__;
+    var modalCss = __dependency5__["default"] || __dependency5__;
     var modalTemplate = __dependency6__["default"] || __dependency6__;
     var Application = __dependency7__.Application;
 
@@ -17,16 +17,18 @@ define("ic-modal",
         container.register('component:ic-modal-form', ModalFormComponent);
         container.register('component:ic-modal-trigger', ModalTriggerComponent);
         container.register('component:ic-modal-title', ModalTitleComponent);
-        container.register('template:components/ic-modal-css', css);
-        container.register('template:components/ic-modal-form-css', css);
+        container.register('template:components/ic-modal-css', modalCss);
+        container.register('template:components/ic-modal-form-css', modalCss);
         container.register('template:components/ic-modal', modalTemplate);
         container.register('template:components/ic-modal-form', modalTemplate);
       }
     });
 
     __exports__.ModalComponent = ModalComponent;
+    __exports__.ModalFormComponent = ModalFormComponent;
     __exports__.ModalTriggerComponent = ModalTriggerComponent;
     __exports__.ModalTitleComponent = ModalTitleComponent;
+    __exports__.modalCss = modalCss;
   });define("ic-modal/modal-form",
   ["./modal","exports"],
   function(__dependency1__, __exports__) {
@@ -168,7 +170,17 @@ define("ic-modal",
 
       classNames: ['ic-modal-trigger'],
 
-      attributeBindings: ['aria-label'],
+      attributeBindings: [
+        'aria-label',
+        'disabled',
+        'type'
+      ],
+
+      /**
+       * We don't want triggers as the target for form submits from focused fields.
+       */
+
+      type: 'button',
 
       /**
        * We aren't using a tagName because we want these to always be
@@ -270,6 +282,9 @@ define("ic-modal",
      * Accessible modal dialog component.
      *
      * @class Modal
+     * @event willOpen
+     * @event didOpen
+     * @event willClose
      */
 
     __exports__["default"] = Ember.Component.extend({
@@ -382,12 +397,14 @@ define("ic-modal",
 
       open: function(options) {
         options = options || {};
+        this.trigger('willOpen');
         this.sendAction('on-open', this);
         this.set('isOpen', true);
         lastOpenedModal = this;
         Ember.run.schedule('afterRender', this, function() {
           this.maybeMakeDefaultChildren();
           this.set('after-open', 'true');
+          this.trigger('didOpen');
           if (options.focus !== false) {
             // after render because we want the the default close button to get focus
             Ember.run.schedule('afterRender', this, 'focus');
@@ -410,6 +427,7 @@ define("ic-modal",
        */
 
       close: function() {
+        this.trigger('willClose');
         this.sendAction('on-close', this);
         this.set('isOpen', false);
         this.set('after-open', null);
@@ -436,14 +454,14 @@ define("ic-modal",
         if (!target.length) target = this.$(':tabbable');
         // maybe they destroyed the close button? this shoudn't happen but could
         if (!target.length) target = this.$();
-        target.first().focus();
+        target[0].focus();
       },
 
       /**
        * Shows or hides the modal, depending on current state.
        *
        * @method toggleVisibility
-       * @param toggler ic.modal.ToggleComponent
+       * @param toggler ToggleComponent
        * @param options Object
        * @public
        */
@@ -653,9 +671,10 @@ define("ic-modal",
           isTabIndexNotNaN) && visible( element );
     }
 
-    function visible( element ) {
-      return $.expr.filters.visible( element ) &&
-        !$( element ).parents().addBack().filter(function() {
+    function visible(element) {
+      var $el = $(element);
+      return $.expr.filters.visible(element) &&
+        !$($el, $el.parents()).filter(function() {
           return $.css( this, "visibility" ) === "hidden";
         }).length;
     }

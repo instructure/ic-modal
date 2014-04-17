@@ -27,9 +27,10 @@ define(
           isTabIndexNotNaN) && visible( element );
     }
 
-    function visible( element ) {
-      return $.expr.filters.visible( element ) &&
-        !$( element ).parents().addBack().filter(function() {
+    function visible(element) {
+      var $el = $(element);
+      return $.expr.filters.visible(element) &&
+        !$($el, $el.parents()).filter(function() {
           return $.css( this, "visibility" ) === "hidden";
         }).length;
     }

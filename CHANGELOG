@@ -1,3 +1,12 @@
+v0.1.0
+Thu, 17 Apr 2014 16:12:55 GMT
+
+b399b85 [added] modal events
+da0fc4c [added] ModalFormComponent as an export of main
+0d714ff [fixed] triggers should not be submit targets
+678768e [fixed] #5 infinite loop on open in jQuery < 1.9
+
+
 v0.0.6
 Wed, 16 Apr 2014 17:19:03 GMT
 

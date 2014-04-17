@@ -25,6 +25,9 @@ function handleTabIntoBrowser(event) {
  * Accessible modal dialog component.
  *
  * @class Modal
+ * @event willOpen
+ * @event didOpen
+ * @event willClose
  */
 
 exports["default"] = Ember.Component.extend({
@@ -137,12 +140,14 @@ exports["default"] = Ember.Component.extend({
 
   open: function(options) {
     options = options || {};
+    this.trigger('willOpen');
     this.sendAction('on-open', this);
     this.set('isOpen', true);
     lastOpenedModal = this;
     Ember.run.schedule('afterRender', this, function() {
       this.maybeMakeDefaultChildren();
       this.set('after-open', 'true');
+      this.trigger('didOpen');
       if (options.focus !== false) {
         // after render because we want the the default close button to get focus
         Ember.run.schedule('afterRender', this, 'focus');
@@ -165,6 +170,7 @@ exports["default"] = Ember.Component.extend({
    */
 
   close: function() {
+    this.trigger('willClose');
     this.sendAction('on-close', this);
     this.set('isOpen', false);
     this.set('after-open', null);
@@ -191,14 +197,14 @@ exports["default"] = Ember.Component.extend({
     if (!target.length) target = this.$(':tabbable');
     // maybe they destroyed the close button? this shoudn't happen but could
     if (!target.length) target = this.$();
-    target.first().focus();
+    target[0].focus();
   },
 
   /**
    * Shows or hides the modal, depending on current state.
    *
    * @method toggleVisibility
-   * @param toggler ic.modal.ToggleComponent
+   * @param toggler ToggleComponent
    * @param options Object
    * @public
    */

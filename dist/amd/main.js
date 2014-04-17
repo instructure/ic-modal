@@ -6,7 +6,7 @@ define(
     var ModalFormComponent = __dependency2__["default"] || __dependency2__;
     var ModalTriggerComponent = __dependency3__["default"] || __dependency3__;
     var ModalTitleComponent = __dependency4__["default"] || __dependency4__;
-    var css = __dependency5__["default"] || __dependency5__;
+    var modalCss = __dependency5__["default"] || __dependency5__;
     var modalTemplate = __dependency6__["default"] || __dependency6__;
     var Application = __dependency7__.Application;
 
@@ -17,14 +17,16 @@ define(
         container.register('component:ic-modal-form', ModalFormComponent);
         container.register('component:ic-modal-trigger', ModalTriggerComponent);
         container.register('component:ic-modal-title', ModalTitleComponent);
-        container.register('template:components/ic-modal-css', css);
-        container.register('template:components/ic-modal-form-css', css);
+        container.register('template:components/ic-modal-css', modalCss);
+        container.register('template:components/ic-modal-form-css', modalCss);
         container.register('template:components/ic-modal', modalTemplate);
         container.register('template:components/ic-modal-form', modalTemplate);
       }
     });
 
     __exports__.ModalComponent = ModalComponent;
+    __exports__.ModalFormComponent = ModalFormComponent;
     __exports__.ModalTriggerComponent = ModalTriggerComponent;
     __exports__.ModalTitleComponent = ModalTitleComponent;
+    __exports__.modalCss = modalCss;
   });
