@@ -54,7 +54,7 @@ In its simplest form:
 ```html
 {{#ic-modal-trigger controls="ohai"}}
   open the modal
-{{/ic-modal}}
+{{/ic-modal-trigger}}
 
 {{#ic-modal id="ohai"}}
   Ohai!
@@ -72,7 +72,7 @@ Here are all the bells and whistles:
 
 {{#ic-modal-trigger controls="tacos"}}
   abrir los tacos
-{{/ic-modal}}
+{{/ic-modal-trigger}}
 
 <!--
   The "closed-when" attribute can be bound to a controller property. If
@@ -83,7 +83,7 @@ Here are all the bells and whistles:
 
 {{#ic-modal id="tacos" closed-when=tacosOrdered}}
 
-  <!-- 
+  <!--
     This is optional, but you really should provide your own title,
     it gets used in the UI and is important for screenreaders to tell the
     user what modal they are in. If you hate it, write some CSS to hide
@@ -95,7 +95,7 @@ Here are all the bells and whistles:
   <!--
     If a trigger lives inside a modal it doesn't need a "controls"
     attribute, it'll just know.
-    
+
     If you don't provide a trigger inside the modal, you'll get one
     automatically, but if you're translating, you're going to want your
     own.
