@@ -135,13 +135,20 @@ One of the most common use-cases for a modal dialog is a form.
   on-submit="submitForm"
 
   <!--
+    if the form is closed w/o being submit, maybe you need to restore
+    the old properties of a model, etc.
+  -->
+  on-cancel="restoreModel"
+
+  <!-- same thing as above -->
+  on-invalid-close="handleCloseWhileSaving"
+
+  <!--
     bind component's "awaiting-return-value" to local "saving",
     more on this in the js section
   -->
   awaiting-return-value=saving
 
-  <!-- same thing as above -->
-  on-invalid-close="handleCloseWhileSaving"
 }}
 
   <!-- in here you are already a form, just add your form elements -->
@@ -192,6 +199,10 @@ App.ApplicationController = Ember.Controller.extend({
     // `event.returnValue` is stil resolving, this event is sent.
     handleCloseWhileSaving: function(modal) {
       alert("Hold your horses, we're still saving stuff");
+    },
+
+    restoreModel: function(modal) {
+      this.get('model').setProperties(this.get('modelPropsBeforeEdit'));
     }
   }
 });
