@@ -44,6 +44,7 @@ define("ic-modal",
      *   @param event Event - the DOM event. If you set `event.returnValue` to a
      *     promise then the modal's `awaiting-return-value` will be true, and the
      *     modal will not close until the promise resolves.
+     * @event on-cancel - sent when the modal was closed but the form was not submitted.
      * @class ModalFormComponent
      * @extends ModalComponent
      */
@@ -94,6 +95,15 @@ define("ic-modal",
       'awaiting-return-value': null,
 
       /**
+       * Provides a way to send the 'on-cancel' action, see `close`.
+       *
+       * @property didSubmit Boolean
+       * @private
+       */
+
+      didSubmit: false,
+
+      /**
        * Closes the dialog after submit. If the `event.returnValue` is a promise,
        * it will wait for the promise to resolve.
        *
@@ -103,6 +113,7 @@ define("ic-modal",
 
       handleSubmit: function(event) {
         event.preventDefault();
+        this.set('didSubmit', true);
         // loses focus on submit, this might be better solved in ModalComponent but
         // I don't understand the issue well enough
         Ember.run.later(this.$(), 'focus', 0);
@@ -124,6 +135,10 @@ define("ic-modal",
         if (this.get('awaiting-return-value')) {
           return this.sendAction('on-invalid-close', this);
         }
+        if (!this.get('didSubmit')) {
+          this.sendAction('on-cancel', this);
+        }
+        this.set('didSubmit', false);
         return this._super.apply(this, arguments);
       }
 
