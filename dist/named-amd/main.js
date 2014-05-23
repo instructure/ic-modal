@@ -455,6 +455,12 @@ define("ic-modal/modal",
         toggler && toggler.focus();
       },
 
+      willDestroyElement: function() {
+        if( lastOpenedModal === this ) {
+          lastOpenedModal = null;
+        }
+      },
+
       /**
        * We need to focus an element so that keyboard and screenreader users end up
        * in the right place after the dialog is opened (or when the users tabs back
