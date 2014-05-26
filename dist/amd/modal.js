@@ -231,13 +231,23 @@ define(
       },
 
       /**
+       * Sometimes we don’t want the user to close the modal
+       * just by pressing "escape"
+       *
+       * @property close-on-escape
+       * @public
+       */
+
+      'close-on-escape': true,
+
+      /**
        * @method handleKeyDown
        * @private
        */
 
       handleKeyDown: function(event) {
         if (event.keyCode == 9 /*tab*/) this.keepTabNavInside(event);
-        if (event.keyCode == 27 /*esc*/) this.close();
+        if (this.get('close-on-escape') && event.keyCode == 27 /*esc*/) this.close();
       }.on('keyDown'),
 
       /**
@@ -265,6 +275,16 @@ define(
       },
 
       /**
+       * Sometimes we don’t want the user to close the modal
+       * just by clicking the overlay
+       *
+       * @property close-on-click
+       * @public
+       */
+
+      'close-on-click': true,
+
+      /**
        * Clicking outside the dialog should close it. We don't need to
        * handle other forms of losing focus (like keyboard nav) because we
        * already handle all of the keyboard navigation when its open.
@@ -274,7 +294,7 @@ define(
        */
 
       closeOnClick: function(event) {
-        if (event.target !== this.get('element')) return;
+        if (!this.get('close-on-click') || event.target !== this.get('element')) return;
         this.close();
       }.on('click'),
 
