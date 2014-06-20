@@ -75,13 +75,13 @@ Here are all the bells and whistles:
 {{/ic-modal-trigger}}
 
 <!--
-  The "closed-when" attribute can be bound to a controller property. If
+  The "close-when" attribute can be bound to a controller property. If
   `tacosOrdered` gets set to `true` then the modal will close.
 
   "open-when" is the same, but opposite.
 -->
 
-{{#ic-modal id="tacos" closed-when=tacosOrdered}}
+{{#ic-modal id="tacos" close-when=tacosOrdered}}
 
   <!--
     This is optional, but you really should provide your own title,
