@@ -224,7 +224,7 @@ define("ic-modal/modal-trigger",
 
       findModal: function() {
         var parent = findParent(this);
-        if (parent) {
+        if (parent && !this.get('controls')) {
           // we don't care about "controls" if we are child
           this.set('modal', parent);
           parent.registerTrigger(this);
