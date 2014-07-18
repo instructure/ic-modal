@@ -279,7 +279,7 @@ var lastOpenedModal = null;
 Ember.$(document).on('focusin', handleTabIntoBrowser);
 
 function handleTabIntoBrowser(event) {
-  if (!lastOpenedModal) return;
+  if (!lastOpenedModal || lastOpenedModal.get('isDestroyed')) return;
   lastOpenedModal.focus();
 }
 
