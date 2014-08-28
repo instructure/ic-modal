@@ -9,9 +9,9 @@ test('renders', function() {
       {{/ic-modal}}
     */}
   });
-  equal(modal.state, 'preRender');
+  equal(modal._state, 'preRender');
   this.append();
-  equal(modal.state, 'inDOM');
+  equal(modal._state, 'inDOM');
 });
 
 // ain't nobody got time for ember's run loop issues, guess I'll write
