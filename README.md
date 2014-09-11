@@ -93,8 +93,10 @@ Here are all the bells and whistles:
   {{#ic-modal-title}}Tacos{{/ic-modal-title}}
 
   <!--
-    If a trigger lives inside a modal it doesn't need a "controls"
-    attribute, it'll just know.
+    If a trigger lives inside a modal you can optionally pass a  "controls"
+    attribute. When omitted, the trigger will default to the modal it is
+    contained within. You can override this behavior by passing a new
+    controls attribute (for example: if you wanted to spawn a different modal).
 
     If you don't provide a trigger inside the modal, you'll get one
     automatically, but if you're translating, you're going to want your

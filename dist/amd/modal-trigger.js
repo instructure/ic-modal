@@ -37,7 +37,8 @@ define(
 
       /**
        * Finds the modal this element controls. If a trigger is a child of
-       * the modal, you do not need to specify a "controls" attribute.
+       * the modal, you can optionally pass a "controls" attribute.
+       * It will default to the parent modal if not specified.
        *
        * @method findModal
        * @private
@@ -45,8 +46,9 @@ define(
 
       findModal: function() {
         var parent = findParent(this);
-        if (parent) {
-          // we don't care about "controls" if we are child
+        if (parent && !this.get('controls')) {
+          // default "controls" to the parent modal if we are a child
+          // and no override is specified
           this.set('modal', parent);
           parent.registerTrigger(this);
         } else {
