@@ -109,7 +109,23 @@ define(
         }
         this.set('didSubmit', false);
         return this._super.apply(this, arguments);
-      }
+      },
+
+      /**
+       * Overriding the modal behaviour by sending 'on-cancel' action if it exists
+       *
+       * @method closeOnClick
+       * @private
+       */
+
+      closeOnClick: function(event) {
+        if (event.target !== this.get('element')) return;
+        if (this['on-cancel']) {
+          this.sendAction('on-cancel');
+        } else {
+          this.close();
+        }
+      }.on('click'),
 
     });
   });
