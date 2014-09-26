@@ -1,9 +1,9 @@
 moduleForComponent('ic-modal', 'Modal', {
   needs : ['component:ic-modal-title', 'component:ic-modal-trigger']
 });
-var modal;
 test('renders', function() {
   expect(21);
+
   var modal = this.subject({});
   equal(modal._state, 'preRender');
   this.append();
