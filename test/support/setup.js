@@ -4,7 +4,8 @@ setResolver(Ember.DefaultResolver.extend({
   testSubjects: {
     'component:ic-modal': ic.modal.ModalComponent,
     'component:ic-modal-trigger': ic.modal.ModalTriggerComponent,
-    'component:ic-modal-title': ic.modal.ModalTitleComponent
+    'component:ic-modal-title': ic.modal.ModalTitleComponent,
+    'template:components/ic-modal': ic.modal.modalTemplate
   },
   resolve: function(fullName) {
     return this.testSubjects[fullName] || this._super.apply(this, arguments);
