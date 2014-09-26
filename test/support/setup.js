@@ -3,8 +3,11 @@ emq.globalize();
 setResolver(Ember.DefaultResolver.extend({
   testSubjects: {
     'component:ic-modal': ic.modal.ModalComponent,
+    'component:ic-modal-form': ic.modal.ModalFormComponent,
     'component:ic-modal-trigger': ic.modal.ModalTriggerComponent,
-    'component:ic-modal-title': ic.modal.ModalTitleComponent
+    'component:ic-modal-title': ic.modal.ModalTitleComponent,
+    'template:components/ic-modal': ic.modal.modalTemplate,
+    'template:components/ic-modal-form': ic.modal.modalTemplate
   },
   resolve: function(fullName) {
     return this.testSubjects[fullName] || this._super.apply(this, arguments);
@@ -19,4 +22,6 @@ Function.prototype.compile = function() {
 function lookupComponent(id) {
   return Ember.View.views[id];
 }
+// workaround 
+jQuery('body').append('<div id="ember-testing"></div>');
 
