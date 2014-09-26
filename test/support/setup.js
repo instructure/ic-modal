@@ -20,4 +20,6 @@ Function.prototype.compile = function() {
 function lookupComponent(id) {
   return Ember.View.views[id];
 }
+// workaround 
+jQuery('body').append('<div id="ember-testing"></div>');
 

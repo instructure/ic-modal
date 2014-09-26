@@ -23,7 +23,7 @@
     "ember": "^1.8.0"
   },
   "devDependencies": {
-    "ember-qunit": "0.1.3",
+    "ember-qunit": "0.1.8",
     "jquery-simulate": "https://raw.github.com/jquery/jquery-simulate/master/jquery.simulate.js",
     "ember-canary": "http://builds.emberjs.com/canary/ember.js"
   }
