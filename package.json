@@ -18,7 +18,7 @@
     "broccoli": "0.12.3",
     "broccoli-cli": "0.0.1",
     "broccoli-dist-es6-module": "0.2.1",
-    "broccoli-template-compiler": "git://github.com/rpflorence/broccoli-template-compiler#patch-1",
+    "broccoli-ember-hbs-template-compiler": "git+https://github.com/rwjblue/broccoli-ember-hbs-template-compiler.git#enable-handlebars-2-0",
     "karma": "0.11.14",
     "karma-chrome-launcher": "0.1.2",
     "karma-cli": "0.0.4",
